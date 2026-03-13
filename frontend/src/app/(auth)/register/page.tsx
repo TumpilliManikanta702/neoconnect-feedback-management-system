@@ -44,8 +44,23 @@ export default function RegisterPage() {
         setError('');
         setLoading(true);
 
+        const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
         try {
-            const { data } = await api.post('/auth/register', { ...formData, role });
+            const response = await fetch(`${API}/api/auth/register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ ...formData, role }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to register');
+            }
+
+            const data = await response.json();
             login(
                 {
                     _id: data._id,
@@ -56,8 +71,8 @@ export default function RegisterPage() {
                 },
                 data.token
             );
-        } catch (err: unknown) {
-            setError((err as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to register');
+        } catch (err: any) {
+            setError(err.message || 'Failed to register');
         } finally {
             setLoading(false);
         }

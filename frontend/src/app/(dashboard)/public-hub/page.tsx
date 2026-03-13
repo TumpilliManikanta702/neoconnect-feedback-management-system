@@ -245,7 +245,7 @@ export default function PublicHubPage() {
                                         .map((min) => (
                                         <a
                                             key={min._id}
-                                            href={`http://localhost:5000${min.fileUrl}`}
+                                            href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${min.fileUrl}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="flex items-center justify-between p-3 rounded-lg bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 transition-colors"
